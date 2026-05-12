@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fluxograma Clínico — Método R.E.H.A.B.I.L.I.T.</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e1117;
+    --surface: #161b27;
+    --surface2: #1e2535;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.18);
+    --amber: #e8a237;
+    --amber-light: #f5c56a;
+    --amber-bg: rgba(232,162,55,0.10);
+    --teal: #38b89a;
+    --teal-bg: rgba(56,184,154,0.10);
+    --red: #e05a5a;
+    --red-bg: rgba(224,90,90,0.10);
+    --blue: #5a9de0;
+    --blue-bg: rgba(90,157,224,0.10);
+    --text: #e8e6e0;
+    --text-muted: #8a8880;
+    --text-dim: #5a5856;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+
+  /* ── GATE ── */
+  #gate {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+  }
+  .gate-wrap {
+    width: 100%;
+    max-width: 480px;
+  }
+  .gate-logo {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 36px;
+    justify-content: center;
+  }
+  .gate-chip {
+    width: 30px; height: 30px;
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+  }
+  .gate-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 36px;
+  }
+  .gate-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 12px;
+  }
+  .gate-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    letter-spacing: -0.4px;
+  }
+  .gate-sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin-bottom: 28px;
+  }
+  .gate-bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+  .gate-bullet {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .gate-bullet::before {
+    content: '✓';
+    color: var(--teal);
+    font-weight: 600;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 0px;
+  }
+  .gate-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  .gate-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 7px;
+    display: block;
+    letter-spacing: 0.3px;
+  }
+  .gate-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.18s;
+    margin-bottom: 14px;
+  }
+  .gate-input:focus { border-color: var(--amber); }
+  .gate-input::placeholder { color: var(--text-dim); }
+  .gate-select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.18s;
+    margin-bottom: 20px;
+    appearance: none;
+    cursor: pointer;
+  }
+  .gate-select:focus { border-color: var(--amber); }
+  .gate-select option { background: #1e2535; }
+  .gate-btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--amber);
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    color: #0e1117;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.15s;
+    letter-spacing: -0.2px;
+  }
+  .gate-btn:hover { background: var(--amber-light); }
+  .gate-btn:active { transform: scale(0.98); }
+  .gate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .gate-privacy {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: center;
+    margin-top: 14px;
+    line-height: 1.5;
+  }
+  .gate-error {
+    font-size: 12px;
+    color: var(--red);
+    margin-bottom: 12px;
+    display: none;
+    padding: 10px 14px;
+    background: var(--red-bg);
+    border-radius: 8px;
+    border: 1px solid rgba(224,90,90,0.2);
+  }
+  .gate-success {
+    text-align: center;
+    padding: 28px 0 8px;
+    display: none;
+  }
+  .gate-success-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--teal-bg);
+    border: 1px solid rgba(56,184,154,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    margin: 0 auto 16px;
+  }
+  .gate-success h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+  .gate-success p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .gate-enter-btn {
+    display: inline-block;
+    padding: 14px 32px;
+    background: var(--amber);
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    color: #0e1117;
+    cursor: pointer;
+    transition: background 0.18s;
+    text-decoration: none;
+  }
+  .gate-enter-btn:hover { background: var(--amber-light); }
+
+  /* ── APP ── */
+  #app { display: none; }
+
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .header-left h1 { font-family: 'DM Serif Display', serif; font-size: 20px; font-weight: 400; }
+  .header-left p { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+  .method-tag { display: flex; gap: 4px; flex-wrap: wrap; }
+  .letter-chip { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+  .user-badge { display: flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; font-size: 12px; color: var(--text-muted); }
+  .user-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); }
+  .progress-bar-wrap { background: var(--surface); padding: 12px 40px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 16px; }
+  .progress-track { flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--amber), var(--teal)); border-radius: 2px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+  .progress-label { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+  .breadcrumb { padding: 8px 40px; display: flex; gap: 6px; flex-wrap: wrap; min-height: 36px; }
+  .crumb { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); color: var(--text-dim); }
+  .crumb.active { border-color: var(--amber); color: var(--amber); }
+  .main { max-width: 860px; margin: 0 auto; padding: 28px 40px 80px; }
+
+  .node-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 30px 34px; margin-bottom: 14px; animation: fadeUp 0.35s cubic-bezier(0.4,0,0.2,1) both; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  .node-phase { font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+  .node-title { font-family: 'DM Serif Display', serif; font-size: 25px; font-weight: 400; line-height: 1.25; letter-spacing: -0.4px; margin-bottom: 10px; }
+  .node-subtitle { font-size: 14px; color: var(--text-muted); line-height: 1.65; margin-bottom: 22px; }
+  .node-detail { background: var(--surface2); border-radius: 10px; padding: 14px 18px; margin-bottom: 22px; }
+  .node-detail-title { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+  .node-detail ul { list-style: none; }
+  .node-detail li { font-size: 13px; color: var(--text-muted); padding: 3px 0 3px 16px; position: relative; line-height: 1.5; }
+  .node-detail li::before { content: '—'; position: absolute; left: 0; color: var(--text-dim); font-size: 11px; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn { flex: 1; min-width: 200px; padding: 14px 18px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; text-align: left; transition: all 0.2s; display: flex; align-items: flex-start; gap: 10px; }
+  .btn:hover { transform: translateY(-2px); border-color: var(--border-strong); }
+  .btn.expanded { border-color: var(--border-strong); }
+  .btn .btn-icon { width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .btn .btn-label { font-size: 13px; font-weight: 500; }
+  .btn .btn-desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+  .btn.yes { border-color: rgba(56,184,154,0.3); }
+  .btn.yes:hover { border-color: var(--teal); background: var(--teal-bg); }
+  .btn.no { border-color: rgba(232,162,55,0.3); }
+  .btn.no:hover { border-color: var(--amber); background: var(--amber-bg); }
+  .btn.primary { background: var(--amber); border-color: var(--amber); color: #0e1117; justify-content: center; text-align: center; font-size: 14px; font-weight: 600; }
+  .btn.primary:hover { background: var(--amber-light); border-color: var(--amber-light); }
+  .btn.restart { background: transparent; border-color: var(--border); color: var(--text-muted); font-size: 13px; justify-content: center; }
+  .btn.restart:hover { color: var(--text); border-color: var(--border-strong); }
+  .outcome-card { border-radius: 16px; padding: 30px 34px; margin-bottom: 14px; animation: fadeUp 0.35s cubic-bezier(0.4,0,0.2,1) both; border: 1px solid transparent; }
+  .outcome-card.green { background: var(--teal-bg); border-color: rgba(56,184,154,0.25); }
+  .outcome-card.amber { background: var(--amber-bg); border-color: rgba(232,162,55,0.25); }
+  .outcome-card.red { background: var(--red-bg); border-color: rgba(224,90,90,0.25); }
+  .outcome-card.blue { background: var(--blue-bg); border-color: rgba(90,157,224,0.25); }
+  .outcome-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+  .outcome-label.green { color: var(--teal); }
+  .outcome-label.amber { color: var(--amber); }
+  .outcome-label.red { color: var(--red); }
+  .outcome-label.blue { color: var(--blue); }
+  .outcome-title { font-family: 'DM Serif Display', serif; font-size: 23px; font-weight: 400; margin-bottom: 10px; line-height: 1.2; }
+  .outcome-body { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+  .outcome-steps { margin-top: 18px; display: flex; flex-direction: column; gap: 7px; }
+  .step { display: flex; align-items: flex-start; gap: 10px; background: rgba(255,255,255,0.03); border-radius: 9px; padding: 10px 13px; }
+  .step-num { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .step-num.teal { background: var(--teal); color: #0e1117; }
+  .step-num.amber { background: var(--amber); color: #0e1117; }
+  .step-num.red { background: var(--red); color: #fff; }
+  .step-num.blue { background: var(--blue); color: #0e1117; }
+  .step-text { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+  .step-text strong { color: var(--text); font-weight: 500; }
+  .history { margin-top: 18px; }
+  .history-title { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; }
+  .history-item { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text-dim); padding: 5px 0; border-bottom: 1px solid var(--border); }
+  .history-item span:first-child { color: var(--text-muted); min-width: 60px; }
+  .footer { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); padding: 12px 40px; display: flex; align-items: center; justify-content: space-between; gap: 16px; z-index: 100; }
+  .footer-brand { font-family: 'DM Serif Display', serif; font-size: 14px; color: var(--text-muted); }
+  .footer-brand span { color: var(--amber); }
+
+  @media (max-width: 600px) {
+    .gate-card { padding: 28px 22px; }
+    .gate-title { font-size: 23px; }
+    .header, .main, .breadcrumb, .progress-bar-wrap { padding-left: 18px; padding-right: 18px; }
+    .footer { padding: 10px 18px; }
+    .btn { min-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ GATE ══════════════ -->
+<div id="gate">
+  <div class="gate-wrap">
+
+    <div class="gate-logo">
+      <div class="gate-chip" style="background:rgba(232,162,55,0.15);color:#e8a237">R</div>
+      <div class="gate-chip" style="background:rgba(56,184,154,0.15);color:#38b89a">E</div>
+      <div class="gate-chip" style="background:rgba(155,120,232,0.15);color:#9b78e8">H</div>
+      <div class="gate-chip" style="background:rgba(90,157,224,0.15);color:#5a9de0">A</div>
+      <div class="gate-chip" style="background:rgba(224,90,90,0.15);color:#e05a5a">B</div>
+      <div class="gate-chip" style="background:rgba(232,162,55,0.15);color:#e8a237">I</div>
+      <div class="gate-chip" style="background:rgba(56,184,154,0.15);color:#38b89a">L</div>
+      <div class="gate-chip" style="background:rgba(155,120,232,0.15);color:#9b78e8">I</div>
+      <div class="gate-chip" style="background:rgba(90,157,224,0.15);color:#5a9de0">T</div>
+    </div>
+
+    <div class="gate-card">
+      <div id="formSection">
+        <div class="gate-eyebrow">Ferramenta clínica gratuita</div>
+        <div class="gate-title">Você reabilita com critério ou com espaço disponível?</div>
+        <div class="gate-sub">Acesse o fluxograma de decisão clínica que guia você do diagnóstico à execução — antes de encostar na broca.</div>
+
+        <div class="gate-bullets">
+          <div class="gate-bullet">Como identificar DVO perdida vs. preservada em 3 perguntas</div>
+          <div class="gate-bullet">Quando NÃO alterar a DVO — o critério que a maioria ignora</div>
+          <div class="gate-bullet">Protocolo de provisórios e sinais de alerta precoce</div>
+          <div class="gate-bullet">Escolha restauradora baseada em biomecânica, não em preferência</div>
+        </div>
+
+        <hr class="gate-divider">
+
+        <div id="gateError" class="gate-error">Preencha nome e email para continuar.</div>
+
+        <label class="gate-label" for="gateName">Nome completo</label>
+        <input class="gate-input" type="text" id="gateName" placeholder="Dr. João Silva" autocomplete="name">
+
+        <label class="gate-label" for="gateEmail">Email profissional</label>
+        <input class="gate-input" type="email" id="gateEmail" placeholder="joao@clinica.com.br" autocomplete="email">
+
+        <label class="gate-label" for="gateDuvida">Minha maior insegurança em reabilitações é...</label>
+        <select class="gate-select" id="gateDuvida">
+          <option value="">Selecione a opção mais próxima</option>
+          <option value="determinar_dvo">Determinar a DVO correta antes de começar</option>
+          <option value="dvo_perdida">Saber se a DVO está perdida ou preservada</option>
+          <option value="provisorios">Fazer e validar provisórios com segurança</option>
+          <option value="oclusao">Ajuste oclusal e guia anterior funcional</option>
+          <option value="dtm">Reabilitar pacientes com histórico de DTM</option>
+          <option value="materiais">Escolher o material restaurador correto</option>
+        </select>
+
+        <button class="gate-btn" id="gateBtn" onclick="submitGate()">
+          Acessar o fluxograma clínico →
+        </button>
+
+        <div class="gate-privacy">🔒 Seus dados são protegidos e não serão compartilhados.<br>Você receberá apenas conteúdo relevante sobre reabilitação oral.</div>
+      </div>
+
+      <div class="gate-success" id="successSection">
+        <div class="gate-success-icon">✓</div>
+        <h3>Acesso liberado!</h3>
+        <p>Obrigado, <strong id="successName"></strong>. Seu fluxograma está pronto.<br>Vamos ao diagnóstico clínico.</p>
+        <button class="gate-enter-btn" onclick="enterApp()">Entrar no fluxograma →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ APP ══════════════ -->
+<div id="app">
+  <div class="header">
+    <div class="header-left">
+      <h1>Fluxograma de Decisão Clínica</h1>
+      <p>Reabilitação com desgaste dental · Método R.E.H.A.B.I.L.I.T.</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div class="method-tag" id="methodTag"></div>
+      <div class="user-badge"><div class="user-dot"></div><span id="userBadgeName"></span></div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-label" id="progressLabel">Início</div>
+  </div>
+
+  <div class="breadcrumb" id="breadcrumb"></div>
+  <div class="main" id="main"></div>
+
+  <div class="footer">
+    <div class="footer-brand">Método <span>R.E.H.A.B.I.L.I.T.</span></div>
+    <div style="font-size:12px;color:var(--text-dim)">Da decisão à execução com propósito</div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────
+// 1. Acesse make.com → Novo cenário → Módulo "Webhooks" → "Custom webhook"
+// 2. Clique em "Create a webhook" → copie a URL gerada
+// 3. Cole a URL abaixo substituindo o placeholder
+const WEBHOOK_URL = 'https://hook.us2.make.com/plwcn313skbo3huautkx7a3nhit4c3qf';
+// ────────────────────────────────────────────────────────
+
+const LETTERS = [
+  {l:'R',color:'#e8a237',bg:'rgba(232,162,55,0.15)'},
+  {l:'E',color:'#38b89a',bg:'rgba(56,184,154,0.15)'},
+  {l:'H',color:'#9b78e8',bg:'rgba(155,120,232,0.15)'},
+  {l:'A',color:'#5a9de0',bg:'rgba(90,157,224,0.15)'},
+  {l:'B',color:'#e05a5a',bg:'rgba(224,90,90,0.15)'},
+  {l:'I',color:'#e8a237',bg:'rgba(232,162,55,0.15)'},
+  {l:'L',color:'#38b89a',bg:'rgba(56,184,154,0.15)'},
+  {l:'I',color:'#9b78e8',bg:'rgba(155,120,232,0.15)'},
+  {l:'T',color:'#5a9de0',bg:'rgba(90,157,224,0.15)'},
+];
+
+let leadData = {};
+
+async function submitGate() {
+  const name  = document.getElementById('gateName').value.trim();
+  const email = document.getElementById('gateEmail').value.trim();
+  const duvida = document.getElementById('gateDuvida').value;
+  const err   = document.getElementById('gateError');
+
+  if (!name || !email || !email.includes('@')) {
+    err.style.display = 'block';
+    err.textContent   = 'Preencha nome e email válidos para continuar.';
+    return;
+  }
+  err.style.display = 'none';
+
+  const btn = document.getElementById('gateBtn');
+  btn.disabled = true;
+  btn.textContent = 'Registrando acesso...';
+
+  leadData = {
+    nome: name,
+    email: email,
+    duvida: duvida || 'não informada',
+    origem: document.referrer || 'direto',
+    data_hora: new Date().toLocaleString('pt-BR'),
+    utm_source: new URLSearchParams(window.location.search).get('utm_source') || '',
+    utm_medium: new URLSearchParams(window.location.search).get('utm_medium') || '',
+    utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign') || '',
+  };
+
+  // Envia para o webhook (não bloqueia se falhar)
+  try {
+    await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(leadData)
+    });
+  } catch(e) { /* continua mesmo se webhook falhar */ }
+
+  // Salva localmente para personalização (não impede novo acesso de outra pessoa)
+  try { sessionStorage.setItem('rh_lead', JSON.stringify(leadData)); } catch(e) {}
+
+  document.getElementById('successName').textContent = name.split(' ')[0];
+  document.getElementById('formSection').style.display = 'none';
+  document.getElementById('successSection').style.display = 'block';
+}
+
+function enterApp() {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('app').style.display   = 'block';
+  initApp();
+  window.scrollTo(0,0);
+}
+
+function initApp() {
+  const tag = document.getElementById('methodTag');
+  LETTERS.forEach(l => {
+    const c = document.createElement('div');
+    c.className = 'letter-chip';
+    c.style.cssText = `background:${l.bg};color:${l.color}`;
+    c.textContent = l.l;
+    tag.appendChild(c);
+  });
+  const firstName = (leadData.nome || 'Dentista').split(' ')[0];
+  document.getElementById('userBadgeName').textContent = 'Dr(a). ' + firstName;
+  current = 'start'; history = [];
+  renderMain();
+}
+
+// ── ÁRVORE CLÍNICA ──────────────────────────────────────
+const tree = {
+  start: {
+    phase:'Entrada · Módulo R', phaseColor:'#e8a237',
+    title:'Paciente com desgaste dental',
+    subtitle:'O primeiro passo não é restaurar. É compreender como esse paciente chegou até aqui.',
+    detail:{ title:'Avalie na anamnese', items:['Sono e parafunção (bruxismo noturno/diurno)','Refluxo gastroesofágico e dieta ácida','Hábitos e histórico restaurador','Queixa: estética, funcional ou mista?','Progressão — rápida ou crônica?'] },
+    question:'Os fatores etiológicos foram identificados e há algum sob controle?',
+    yes:{ label:'Sim — etiologia mapeada', desc:'Bruxismo, erosão ou sobrecarga identificados', next:'diagFuncional' },
+    no:{ label:'Não — etiologia ainda obscura', desc:'Preciso aprofundar anamnese e exames', next:'controlEtio' }
+  },
+  controlEtio: {
+    type:'outcome', color:'amber',
+    phase:'Módulo R — Reconhecer etiologia',
+    title:'Controle etiológico antes de reabilitar',
+    body:'Restaurar sem mapear a causa é garantia de retrabalho. O desgaste é consequência, não diagnóstico.',
+    steps:[
+      {label:'Solicitar exames',desc:'pH salivar, polissonografia se suspeita de apneia',color:'amber'},
+      {label:'Encaminhamento',desc:'Gastroenterologista (refluxo), médico do sono (bruxismo)',color:'amber'},
+      {label:'Controle de hábitos',desc:'Dieta, mastigação unilateral, parafunção',color:'amber'},
+      {label:'Reavalie em 3–4 semanas',desc:'Retorne ao início com etiologia controlada',color:'amber'},
+    ],
+    next:'start', nextLabel:'Recomeçar com etiologia controlada'
+  },
+  diagFuncional: {
+    phase:'Módulo E · Diagnóstico funcional', phaseColor:'#38b89a',
+    title:'Diagnóstico funcional do sistema',
+    subtitle:'Antes de qualquer decisão restauradora, avalie o funcionamento do sistema mastigatório.',
+    detail:{ title:'Análise obrigatória', items:['DVO atual — espaço interoclusal e posição de repouso','Estabilidade oclusal — contatos em MIH','Guia anterior — presente, ausente ou comprometida?','Desoclusão posterior — guia canino ou função em grupo?','Sinais musculares — palpação masseteres e temporais','ATM — abertura bucal, ruídos, deflexão mandibular'] },
+    question:'Existem sinais clínicos ativos de DTM (dor, limitação de abertura, estalos com dor)?',
+    yes:{ label:'Sim — DTM ativa', desc:'Dor muscular, abertura < 40 mm ou deflexão presente', next:'dtmAtiva' },
+    no:{ label:'Não — sistema estável', desc:'Sem dor, abertura normal, sem deflexão', next:'dvoPerdida' }
+  },
+  dtmAtiva: {
+    type:'outcome', color:'red',
+    phase:'Módulo E — Contraindicação relativa',
+    title:'DTM ativa: estabilizar antes de reabilitar',
+    body:'Reabilitar com DTM ativa perpetua e agrava o quadro. Restaurações definitivas estão contraindicadas até estabilização.',
+    steps:[
+      {label:'Placa de estabilização Michigan',desc:'Uso 3–6 meses com acompanhamento mensal',color:'red'},
+      {label:'Critério de liberação',desc:'Abertura ≥ 40 mm, sem dor muscular, sem deflexão',color:'red'},
+      {label:'Fisioterapia se necessário',desc:'Laser, acupuntura, exercícios de mobilização',color:'red'},
+      {label:'Reavalie o sistema',desc:'Após estabilização, retorne ao diagnóstico funcional',color:'red'},
+    ],
+    next:'diagFuncional', nextLabel:'DTM estabilizada — retomar diagnóstico'
+  },
+  dvoPerdida: {
+    phase:'Módulo H · Hierarquizar decisão', phaseColor:'#9b78e8',
+    title:'A DVO está perdida ou preservada?',
+    subtitle:'Dentes desgastados não significam automaticamente perda de DVO. Esta distinção define toda a estratégia.',
+    detail:{ title:'Como diferenciar', items:['DVO perdida: havia oclusão estável, perdida por desgaste/extrações. Espaço interoclusal aumentado.','DVO preservada: desgaste com erupção compensatória. Dentes curtos mas em contato. Espaço restaurador limitado.','Use: fotos antigas, cefalometria, proporção facial de terços','Vogal "M" e "S" para espaço livre funcional'] },
+    question:'A DVO está perdida (espaço interoclusal aumentado > 4 mm)?',
+    yes:{ label:'Sim — DVO perdida', desc:'Espaço interoclusal aumentado, perda de suporte posterior', next:'gravidadeDesgaste' },
+    no:{ label:'Não — DVO preservada', desc:'Dentes desgastados mas em contato oclusal', next:'dvoPreservada' }
+  },
+  dvoPreservada: {
+    type:'outcome', color:'blue',
+    phase:'Módulo H — DVO preservada',
+    title:'DVO preservada: criar espaço antes de restaurar',
+    body:'Na DVO preservada não há espaço para restaurar. Restaurar sem criar espaço gera desoclusão prematura e fratura.',
+    steps:[
+      {label:'Opção 1 — Intrusão ortodôntica',desc:'Intruir anteriores para criar espaço vertical',color:'blue'},
+      {label:'Opção 2 — Desgaste seletivo controlado',desc:'Em casos com abundância de estrutura dental',color:'blue'},
+      {label:'Opção 3 — Aumentar DVO',desc:'Aceitar DVO ligeiramente aumentada após validação em provisórios',color:'blue'},
+      {label:'Validar sempre em provisórios',desc:'Qualquer estratégia exige fase provisória de teste',color:'blue'},
+    ],
+    next:'alterarDvo', nextLabel:'Avançar para decisão de DVO'
+  },
+  gravidadeDesgaste: {
+    phase:'Módulo H · Critério de intervenção', phaseColor:'#9b78e8',
+    title:'Qual a severidade do desgaste?',
+    subtitle:'Nem todo desgaste exige reabilitação imediata. A decisão proporcional ao caso é o pilar H do método.',
+    detail:{ title:'Classificação clínica', items:['Leve: desgaste < 1/3 da coroa, sem dentina generalizada exposta','Moderado: 1/3–2/3, dentina exposta, sensibilidade','Severo: > 2/3, perda de guia anterior, colapso posterior','Ativo ou inativo? Brilhante = ativo; fosco = inativo'] },
+    question:'O desgaste é severo ou moderado progressivo com indicação de reabilitação?',
+    yes:{ label:'Sim — reabilitação indicada', desc:'Moderado progressivo ou severo com comprometimento funcional', next:'alterarDvo' },
+    no:{ label:'Não — monitoramento suficiente', desc:'Leve, inativo ou sem progressão documentada', next:'monitorar' }
+  },
+  monitorar: {
+    type:'outcome', color:'green',
+    phase:'Módulo H — Conduta ativa',
+    title:'Monitoramento e proteção',
+    body:'Monitorar é uma decisão clínica ativa, não omissão. Documentar, proteger e reavaliar periodicamente.',
+    steps:[
+      {label:'Documentação fotográfica padronizada',desc:'Fotos clínicas a cada 6 meses para comparação',color:'teal'},
+      {label:'Placa oclusal de proteção',desc:'Em bruxistas — reduz progressão noturna',color:'teal'},
+      {label:'Controle de fatores etiológicos',desc:'Acompanhamento do refluxo, parafunção e dieta',color:'teal'},
+      {label:'Reavaliação semestral',desc:'Critérios: progressão, sensibilidade, estética',color:'teal'},
+    ],
+    next:'start', nextLabel:'Novo paciente — recomeçar fluxo'
+  },
+  alterarDvo: {
+    phase:'Módulo A · Ajustar a DVO', phaseColor:'#5a9de0',
+    title:'Alterar a DVO?',
+    subtitle:'DVO não é número. É decisão clínica. Aumentar só quando indicado, quanto necessário, e sempre validado.',
+    detail:{ title:'Critérios para alterar DVO', items:['Espaço restaurador insuficiente sem alteração','Perda real de DVO documentada','Melhora estética como objetivo planejado','Paciente sem DTM ativa e boa tolerância neuromuscular','Possibilidade de fase provisória para validação'] },
+    question:'A alteração de DVO está indicada e o paciente pode passar pela fase de validação?',
+    yes:{ label:'Sim — alterar DVO', desc:'Indicação clara, paciente apto, provisório possível', next:'validarDvo' },
+    no:{ label:'Não — reabilitar na DVO atual', desc:'Restaurar respeitando a DVO existente', next:'escolhaRestauradora' }
+  },
+  validarDvo: {
+    phase:'Módulo A · Validação', phaseColor:'#5a9de0',
+    title:'Fase de validação da nova DVO',
+    subtitle:'Nunca saltar direto para o definitivo. A fase reversível é a proteção do tratamento e do profissional.',
+    detail:{ title:'Protocolo de validação', items:['Mock-up em resina direta — comunicação com paciente','Provisórios em resina bis-acrílica na nova DVO','Tempo mínimo: 4–12 semanas','Avaliação: fonética (S e M), conforto muscular, estética','Sinal de alerta: fadiga muscular ou desconforto articular'] },
+    question:'O paciente adaptou-se bem aos provisórios após 4–12 semanas?',
+    yes:{ label:'Sim — adaptação confirmada', desc:'Conforto muscular, fonética e estética aprovados', next:'escolhaRestauradora' },
+    no:{ label:'Não — sinais de desconforto', desc:'Fadiga, cefaleia ou dor articular presentes', next:'ajusteProvisorio' }
+  },
+  ajusteProvisorio: {
+    type:'outcome', color:'amber',
+    phase:'Módulo A — Ajuste de DVO',
+    title:'Recalibrar a DVO provisória',
+    body:'Sinais de desconforto indicam que a alteração foi além da tolerância neuromuscular. Reduzir no próprio provisório.',
+    steps:[
+      {label:'Identificar o tipo de desconforto',desc:'Muscular → DVO excessiva. Articular → posição mandibular incorreta.',color:'amber'},
+      {label:'Reduzir DVO no provisório',desc:'Desgaste seletivo nos provisórios — nunca no definitivo',color:'amber'},
+      {label:'Verificar RC x MIH',desc:'Confirmar se a montagem em RC foi correta e reprodutível',color:'amber'},
+      {label:'Novo período de observação',desc:'Mais 4–6 semanas com DVO ajustada',color:'amber'},
+    ],
+    next:'validarDvo', nextLabel:'Retestar com DVO ajustada'
+  },
+  escolhaRestauradora: {
+    phase:'Módulo B · Escolha restauradora', phaseColor:'#e05a5a',
+    title:'Qual estratégia restauradora?',
+    subtitle:'Material não salva planejamento inadequado. A escolha deve seguir biomecânica, remanescente e carga funcional.',
+    detail:{ title:'Critérios de seleção', items:['Quantidade de remanescente e necessidade de preparo','Carga funcional esperada (bruxista = risco aumentado)','Extensão da reabilitação (parcial ou total)','Orçamento e adesão do paciente','Reparabilidade e custo biológico a longo prazo'] },
+    question:null,
+    options:[
+      {label:'Resina direta', desc:'Aditiva, custo biológico mínimo, desgaste leve-moderado', next:'execDireta'},
+      {label:'Cerâmica indireta', desc:'Desgaste severo, alta resistência, estética premium', next:'execIndireta'},
+      {label:'Abordagem híbrida', desc:'Resina + cerâmica ou tratamento por fases', next:'execHibrida'},
+    ]
+  },
+  execDireta: {
+    type:'outcome', color:'green',
+    phase:'Módulos B + I — Execução direta',
+    title:'Reabilitação direta em resina composta',
+    body:'Abordagem aditiva com zero ou mínimo preparo. Ideal para desgastes moderados e validação de DVO.',
+    steps:[
+      {label:'Reconstrução guiada por enceramento',desc:'Planejamento antes da execução',color:'teal'},
+      {label:'Posteriores antes dos anteriores',desc:'Estabelecer DVO com stops antes da guia',color:'teal'},
+      {label:'Guia anterior funcional',desc:'Guia canino 45–55° em relação ao plano oclusal',color:'teal'},
+      {label:'Ajuste oclusal fino',desc:'Papel 8 e 40 micra — contatos simultâneos em MIH',color:'teal'},
+      {label:'Placa noturna obrigatória em bruxistas',desc:'Preserva o trabalho a longo prazo',color:'teal'},
+    ],
+    next:'longevidade', nextLabel:'Avançar para longevidade'
+  },
+  execIndireta: {
+    type:'outcome', color:'green',
+    phase:'Módulo 10 — Execução indireta',
+    title:'Reabilitação indireta em cerâmica',
+    body:'Resistência, estética e estabilidade funcional a longo prazo. Exige planejamento criterioso.',
+    steps:[
+      {label:'Definir o tipo de restauração',desc:'Laminados, overlays, onlays ou table-tops',color:'teal'},
+      {label:'Provisórios copiados do mock-up',desc:'O provisório é a cópia fiel do resultado final',color:'teal'},
+      {label:'Comunicação com laboratório',desc:'Envelope funcional, guia anterior, distribuição de contatos',color:'teal'},
+      {label:'Cimentação adesiva protocolar',desc:'Isolamento absoluto, silanização, cimento dual',color:'teal'},
+      {label:'Ajuste oclusal pós-cimentação',desc:'Papel 8 micra — sem contatos prematuros',color:'teal'},
+    ],
+    next:'longevidade', nextLabel:'Avançar para longevidade'
+  },
+  execHibrida: {
+    type:'outcome', color:'green',
+    phase:'Módulo 11 — Abordagem híbrida',
+    title:'Tratamento híbrido e por fases',
+    body:'A integração inteligente entre materiais e fases é sinal de maturidade clínica.',
+    steps:[
+      {label:'Planejamento por fases claras',desc:'Fase 1: resina para estabilização. Fase 2: cerâmica definitiva.',color:'teal'},
+      {label:'Sequência: posteriores → anteriores',desc:'Ou arcadas separadas com intervalo',color:'teal'},
+      {label:'Validação progressiva',desc:'Cada fase validada antes de avançar à seguinte',color:'teal'},
+      {label:'Controle de custo biológico',desc:'Resina onde risco menor; cerâmica onde demanda maior',color:'teal'},
+    ],
+    next:'longevidade', nextLabel:'Avançar para longevidade'
+  },
+  longevidade: {
+    type:'outcome', color:'green',
+    phase:'Módulos L + I + T — Sustentar o tratamento',
+    title:'Longevidade, manutenção e protocolo',
+    body:'O tratamento não termina na cimentação. A longevidade é construída no acompanhamento longitudinal.',
+    steps:[
+      {label:'Ajuste oclusal pós-execução',desc:'Revisão de contatos em MIH, lateralidade e protrusão',color:'teal'},
+      {label:'Placa oclusal noturna',desc:'Obrigatória em bruxistas. Revisão anual.',color:'teal'},
+      {label:'Conscientização do paciente',desc:'O que foi feito, por que e como proteger',color:'teal'},
+      {label:'Manutenção semestral',desc:'Fotografia comparativa e avaliação funcional',color:'teal'},
+      {label:'Documentação padronizada',desc:'DVO registrada, materiais usados e data',color:'teal'},
+    ],
+    next:'start', nextLabel:'Novo caso — reiniciar fluxo'
+  }
+};
+
+let current = 'start';
+let history = [];
+
+function goTo(nodeId, label) {
+  if (label) history.push({ id: current, label });
+  current = nodeId;
+  renderBreadcrumb();
+  renderMain();
+  const nodeOrder = ['start','diagFuncional','dvoPerdida','gravidadeDesgaste','alterarDvo','validarDvo','escolhaRestauradora','execDireta','execIndireta','execHibrida','longevidade'];
+  const pct = Math.max(0, Math.round((nodeOrder.indexOf(current) / (nodeOrder.length-1)) * 100));
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `Etapa ${Math.min(history.length+1,12)} de 12`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restart() {
+  current='start'; history=[];
+  document.getElementById('progressFill').style.width='0%';
+  document.getElementById('progressLabel').textContent='Início';
+  renderBreadcrumb(); renderMain();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function renderBreadcrumb() {
+  const bc = document.getElementById('breadcrumb');
+  bc.innerHTML = history.slice(-5).map((h,i) =>
+    `<div class="crumb${i===history.length-1?' active':''}">${h.label}</div>`
+  ).join('');
+}
+
+function renderMain() {
+  const main = document.getElementById('main');
+  const node = tree[current];
+  if (!node) return;
+  if (node.type === 'outcome') renderOutcome(main, node);
+  else if (node.options)       renderMulti(main, node);
+  else                         renderQuestion(main, node);
+}
+
+function detailHtml(d) {
+  if (!d) return '';
+  return `<div class="node-detail"><div class="node-detail-title">${d.title}</div><ul>${d.items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`;
+}
+
+function historyHtml() {
+  if (!history.length) return '';
+  return `<div class="history"><div class="history-title">Caminho percorrido</div>${history.map((h,i)=>`<div class="history-item"><span>Passo ${i+1}</span><span style="color:var(--text-muted)">${h.label}</span></div>`).join('')}</div>`;
+}
+
+function renderQuestion(main, node) {
+  main.innerHTML = `
+    <div class="node-card">
+      <div class="node-phase" style="color:${node.phaseColor}">${node.phase}</div>
+      <div class="node-title">${node.title}</div>
+      <div class="node-subtitle">${node.subtitle}</div>
+      ${detailHtml(node.detail)}
+      <div style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:14px">${node.question}</div>
+      <div class="btn-row">
+        <button class="btn yes" onclick="goTo('${node.yes.next}','${node.yes.label}')">
+          <div class="btn-icon" style="background:var(--teal-bg);color:var(--teal)">✓</div>
+          <div><div class="btn-label">${node.yes.label}</div><div class="btn-desc">${node.yes.desc}</div></div>
+        </button>
+        <button class="btn no" onclick="goTo('${node.no.next}','${node.no.label}')">
+          <div class="btn-icon" style="background:var(--amber-bg);color:var(--amber)">→</div>
+          <div><div class="btn-label">${node.no.label}</div><div class="btn-desc">${node.no.desc}</div></div>
+        </button>
+      </div>
+    </div>${historyHtml()}`;
+}
+
+function renderMulti(main, node) {
+  const opts = node.options.map(o=>`
+    <button class="btn" onclick="goTo('${o.next}','${o.label}')">
+      <div><div class="btn-label">${o.label}</div><div class="btn-desc">${o.desc}</div></div>
+    </button>`).join('');
+  main.innerHTML = `
+    <div class="node-card">
+      <div class="node-phase" style="color:${node.phaseColor}">${node.phase}</div>
+      <div class="node-title">${node.title}</div>
+      <div class="node-subtitle">${node.subtitle}</div>
+      ${detailHtml(node.detail)}
+      <div style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:14px">Selecione a estratégia predominante:</div>
+      <div class="btn-row" style="flex-direction:column">${opts}</div>
+    </div>${historyHtml()}`;
+}
+
+function renderOutcome(main, node) {
+  const cc = node.color;
+  const stepsHtml = node.steps.map((s,i)=>`
+    <div class="step">
+      <div class="step-num ${s.color}">${i+1}</div>
+      <div class="step-text"><strong>${s.label}:</strong> ${s.desc}</div>
+    </div>`).join('');
+  main.innerHTML = `
+    <div class="outcome-card ${cc}">
+      <div class="outcome-label ${cc}">${node.phase}</div>
+      <div class="outcome-title">${node.title}</div>
+      <div class="outcome-body">${node.body}</div>
+      <div class="outcome-steps">${stepsHtml}</div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px">
+      <button class="btn primary" onclick="goTo('${node.next}','${node.nextLabel}')">${node.nextLabel} →</button>
+      <button class="btn restart" onclick="restart()">↩ Recomeçar</button>
+    </div>${historyHtml()}`;
+}
+</script>
+</body>
+</html>
